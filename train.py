@@ -16,7 +16,7 @@ from azureml.data.datapath import DataPath
 run = Run.get_context()
 ws = run.experiment.workspace
 found = False
-key = "heart-disease-dataset"
+key = "heart-failure-dataset"
 
 if key in ws.datasets.keys():
     found = True

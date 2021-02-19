@@ -1,10 +1,15 @@
 # Heart Failure Prediction using Microsoft Azure
 
 Cardiovascular diseases (CVDs) are the number 1 cause of death globally, taking an estimated 17.9 million lives each year, which accounts for 31% of all deaths worlwide.
-Heart failure is a common event caused by CVDs. People with cardiovascular disease or who are at high cardiovascular risk need early detection and management wherein a machine learning model can be of great help. This project involves training Machine Learning Model to predict mortality by Heart Failure using Microsoft Azure and deployment of the model as a web service and finding. We also figure the main factors that cause mortality.
+Heart failure is a common event caused by CVDs. People with cardiovascular disease or who are at high cardiovascular risk need early detection and management wherein a machine learning model can be of great help. This project involves training Machine Learning Model to predict mortality by Heart Failure using Microsoft Azure and deployment of the model as a web service. We also figure the main factors that cause mortality.
 
+## Project Architecture
 
-## TABLE OF CONTENTS
+The following diagram shows the overall architecture and workflow of the project.
+
+![](images/Project_Architecture.png)
+
+## Project Details
 * [Project Set Up and Installation](#project-set-up-and-installation)
 * [Dataset](#dataset)
   * [Overview](#overview)
@@ -21,6 +26,30 @@ Heart failure is a common event caused by CVDs. People with cardiovascular disea
 * [References](#references)
 
 ## Project Set Up and Installation
+
+Firstly, we need an Azure subscription to access the Azure workspace. For this project, the Azure subscription provided by Udacity was used.
+
+### Create a Workspace
+
+The workspace is the top-level resource that provodes a centralized place to work with all the artifacts we create when we use Azure Machine Learning. The workspace keeps a history of all training runs, including logs, metrics, output, and a snapshot of our scripts. 
+
+The workspace can be created with the help of [Create and manage Azure Machine Learning workspaces](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-manage-workspace?tabs=python) document.
+
+### Set up Compute Instance
+
+A compute instance is a managed cloud-based workstation which is used as a fully configured and managed development environment. 
+
+A compute instance with name `notebook139012` and virtual machine size of `STANDARD_DS3_V2` was created.
+
+The screenshot below shows the registered compute instances.
+
+![](images/Compute_Instance.png)
+
+### Set up Compute Cluster
+
+Compute cluster is a managed-compute infrastructure that allows us to easily create a single or multi-node compute. Compute clusters scales up automatically when a job is submitted and can run jobs securely in a virtual network environment.
+
+A compute cluster `new-compute` with virtual machine size of `STANDARD_D2_V2` and `max_nodes =4` was created.
 
 ## Dataset
 

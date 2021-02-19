@@ -1,11 +1,26 @@
-*NOTE:* This file is a template that you can use to create the README for your project. The *TODO* comments below will highlight the information you should be sure to include.
+# Heart Failure Prediction using Microsoft Azure
 
-# Your Project Title Here
+Cardiovascular diseases (CVDs) are the number 1 cause of death globally, taking an estimated 17.9 million lives each year, which accounts for 31% of all deaths worlwide.
+Heart failure is a common event caused by CVDs. People with cardiovascular disease or who are at high cardiovascular risk need early detection and management wherein a machine learning model can be of great help. This project involves training Machine Learning Model to predict mortality by Heart Failure using Microsoft Azure and deployment of the model as a web service and finding. We also figure the main factors that cause mortality.
 
-*TODO:* Write a short introduction to your project.
+
+## TABLE OF CONTENTS
+* [Project Set Up and Installation](#project-set-up-and-installation)
+* [Dataset](#dataset)
+  * [Overview](#overview)
+  * [Task](#task)
+  * [Access](#access)
+* [Automated ML](#automated-ml)
+  * [Results](#results)
+* [Hyperparameter Tuning](#hyperparameter-tuning)
+  * [Results](#results)
+* [Model Deployment](#model-deployment)
+* [Screen Recording](#screen-recording)
+* [Standout Suggestions](standout-suggestions)
+* [Improvements and Future Work](#improvements-and-future-work)
+* [References](#references)
 
 ## Project Set Up and Installation
-*OPTIONAL:* If your project has any special installation steps, this is where you should put it. To turn this project into a professional portfolio project, you are encouraged to explain how to set up this project in AzureML.
 
 ## Dataset
 
@@ -46,3 +61,8 @@
 
 ## Standout Suggestions
 *TODO (Optional):* This is where you can provide information about any standout suggestions that you have attempted.
+
+## Improvements and Future Work
+
+
+## References

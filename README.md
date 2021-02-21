@@ -1,11 +1,13 @@
 # Heart Failure Prediction using Microsoft Azure
 
+## Project Overview
+
 Cardiovascular diseases (CVDs) are the number 1 cause of death globally, taking an estimated 17.9 million lives each year, which accounts for 31% of all deaths worlwide.
 Heart failure is a common event caused by CVDs. People with cardiovascular disease or who are at high cardiovascular risk need early detection and management wherein a machine learning model can be of great help. This project involves training Machine Learning Model to predict mortality by Heart Failure using Microsoft Azure and deployment of the model as a web service. We also figure the main factors that cause mortality.
 
 ## Project Architecture
 
-The following diagram shows the overall architecture and workflow of the project.
+*Figure 1 : The following diagram shows the overall architecture and workflow of the project.*
 
 ![](images/Project_Architecture.png)
 
@@ -13,6 +15,7 @@ The following diagram shows the overall architecture and workflow of the project
 * [Project Set Up and Installation](#project-set-up-and-installation)
 * [Dataset](#dataset)
   * [Overview](#overview)
+  * [Exploratory Data Analysis](#exploratory-data-analysis)
   * [Task](#task)
   * [Access](#access)
 * [Automated ML](#automated-ml)
@@ -41,7 +44,7 @@ A compute instance is a managed cloud-based workstation which is used as a fully
 
 A compute instance with name `notebook139012` and virtual machine size of `STANDARD_DS3_V2` was created.
 
-The screenshot below shows the registered compute instances.
+*Figure 2 : The screenshot below shows the registered compute instances.*
 
 ![](images/Compute_Instance.png)
 
@@ -49,18 +52,60 @@ The screenshot below shows the registered compute instances.
 
 Compute cluster is a managed-compute infrastructure that allows us to easily create a single or multi-node compute. Compute clusters scales up automatically when a job is submitted and can run jobs securely in a virtual network environment.
 
-A compute cluster `new-compute` with virtual machine size of `STANDARD_D2_V2` and `max_nodes =4` was created.
+A compute cluster `new-compute` with virtual machine size of `STANDARD_D2_V2` and `max_nodes = 4` was created.
+
+### Set up Docker
+
+Docker is an open platform for developing, shipping, and running applications. Here Docker is used for running Swagger on localhost.
+
+The docker can set up using [Get Docker](https://docs.docker.com/get-docker/).
 
 ## Dataset
 
+A dataset external to the Azure ML ecosystem and supported by the Azure ML's `automl` API was used.
+
 ### Overview
-*TODO*: Explain about the data you are using and where you got it from.
+
+The dataset used in this project is [Heart Failure Prediction](https://www.kaggle.com/andrewmvd/heart-failure-clinical-data) dataset from [Kaggle](https://www.kaggle.com/). It consists of 299 rows and 13 columns
+
+### Exploratory Data Analysis
+
+The preliminary exploratory data analysis on the dataset is shown in [Exploratory Data Analysis.ipynb](Exploratory Data Analysis.ipynb)
 
 ### Task
-*TODO*: Explain the task you are going to be solving with this dataset and the features you will be using for it.
+
+Heart failure is a common event caused by cardiovascular diseases which is the number 1 cause of death globally. People with cardiovascular disease or who are at high cardiovascular risk need early detection and management wherein a machine learning model can be of great help. 
+
+The total features of the dataset are :
+
+  * `age` - Age
+  * `anaemia` - Decrease of red blood cells or hemoglobin (boolean)
+  * `creatinine_phosphokinase` - Level of the CPK enzyme in the blood (mcg/L)
+  * `diabetes` - If the patient has diabetes (boolean)
+  * `ejection_fraction` - Percentage of blood leaving the heart at each contraction (percentage)
+  * `high_blood_pressure` - If the patient has hypertension (boolean)
+  * `platelets` - Platelets in the blood (kiloplatelets/mL)
+  * `serum_creatinine` - Level of serum creatinine in the blood (mg/dL)
+  * `serum_sodium` - Level of serum sodium in the blood (mEq/L)
+  * `sex` - Woman or man (binary)
+  * `smoking` - If the patient smokes or not (boolean)
+  * `time` - Follow-up period (days)  
+  * `DEATH_EVENT` - If the patient deceased during the follow-up period (boolean)
+
+Out of the 13 features mentioned above, the first 12 features are used for training the model and the last feature `DEATH_EVENT` is the target column. The task is to classify `DEATH_EVENT` to `0` or `1` i.e to predict the mortality by heart failure.
 
 ### Access
-*TODO*: Explain how you are accessing the data in your workspace.
+
+The dataset is first downloaded from the Kaggle as a [csv file](heart_failure_clinical_records_dataset.csv). 
+It is then uploaded from the local files and registered to the Azure Workspace as a Tabular dataset format. 
+
+*Figure 3 : The registered datasets are shown below.*
+
+![](images/Registered_Dataset.png)
+
+This dataset can then be accessed in our jupyter notebook by
+
+``` ds = Dataset.get_by_name(ws, 'heart-failure-dataset') ```
 
 ## Automated ML
 *TODO*: Give an overview of the `automl` settings and configuration you used for this experiment

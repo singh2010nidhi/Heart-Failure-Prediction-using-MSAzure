@@ -70,7 +70,7 @@ The dataset used in this project is [Heart Failure Prediction](https://www.kaggl
 
 ### Exploratory Data Analysis
 
-The preliminary exploratory data analysis on the dataset is shown in [Exploratory Data Analysis.ipynb](Exploratory Data Analysis.ipynb)
+The preliminary exploratory data analysis on the dataset is shown in [Exploratory Data Analysis.ipynb](Exploratory%20Data%20Analysis.ipynb)
 
 ### Task
 
@@ -109,6 +109,12 @@ This dataset can then be accessed in our jupyter notebook by
 
 ## Automated ML
 *TODO*: Give an overview of the `automl` settings and configuration you used for this experiment
+### Automated Machine Learning (AutoML)
+
+* Automated machine learning is the process of automating the time consuming, iterative tasks of machine learning model development. 
+* It allows us to build ML models with high scale, efficiency, and productivity all while sustaining model quality.
+
+### 
 
 ### Results
 *TODO*: What are the results you got with your automated ML model? What were the parameters of the model? How could you have improved it?
@@ -128,15 +134,77 @@ This dataset can then be accessed in our jupyter notebook by
 *TODO*: Give an overview of the deployed model and instructions on how to query the endpoint with a sample input.
 
 ## Screen Recording
-*TODO* Provide a link to a screen recording of the project in action. Remember that the screencast should demonstrate:
-- A working model
-- Demo of the deployed  model
-- Demo of a sample request sent to the endpoint and its response
+
+Screen Recording of the project can be viwed using this [YouTube](https://www.youtube.com/watch?v=ihynrOmvCiU&t=43s) link.
+
+This shows demo of:
+- Working model
+- Deployed  model
+- Sample request sent to the endpoint and its response
 
 ## Standout Suggestions
-*TODO (Optional):* This is where you can provide information about any standout suggestions that you have attempted.
+
+**1. Converting the Model into ONNX Format:**
+
+ Open Neural Network Exchange (ONNX) is an open standard format for representing machine learning models. 
+ ONNX helps in enabling interoperability between different frameworks and streamlining the path from research to production.
+ 
+ Our best model i.e the AutoML model is converted to ONNX format which will allow us to interchange models between various ML frameworks and tools.
+ 
+ For this we set the parameter `return_onnx_model = True` to retrieve the best ONNX model, instead of the Python model.
+
+``` 
+from azureml.automl.runtime.onnx_convert import OnnxConverter
+best_run, onnx_mdl = remote_run.get_output(return_onnx_model=True) 
+```
+This model is then saved and the results are predicted.
+
+```
+onnxrt_helper = OnnxInferenceHelper(mdl_bytes, onnx_res)
+pred_onnx, pred_prob_onnx = onnxrt_helper.predict(test_df)
+print(pred_onnx)
+```
+More details about the ONNX model generated can viewed in [this notebook](automl-onnx.ipynb).
+
+**2. Enabling Application Insights:**
+
+Application Insights, a feature of Azure Monitor, is an extensible Application Performance Management (APM) service. It is used to monitor our live applications. It will automatically detect performance anomalies, and includes powerful analytics tools to help us diagnose issues and to understand what users actually do with our application.
+
+The application insights for displaying logs can be enabled for the deployed model endpoint by:
+
+```
+service.update(enable_app_insights = True)
+```
+
+*Figure x : The screenshot below shows the Application Insight Enabled for the deployed model.*
+
+![](images/Deployed_Model_Details2.png)
+
+*Figure y : We can access the logs through the Application Insights URL*
+
+![](images/Application_Insights.png)
+
+**3. Consuming Model Endpoint:**
+ 
+In this step, we will consume the deployed model using Swagger to interact with the HTTP REST API endpoint documentation. For this we will first downlad the [swagger.json](swagger/swagger.json) file that Azure provides for deployed models. Next we will run the [swagger.sh](swagger/swagger.sh) file to pull the latest swagger-ui docker image and run it on port 9000. Finally we run [serve.py](swagger/serve.py) script to serve the swagger.json for our model on an HTTP server.
+
+To interact with deployed web service's API resources, we go to localhost:9000 and change URL on Swagger UI to http://localhost:8000/swagger.json.  
+
+*Figure e : This is shown in the figure below*
+
+![](images/Swagger.png)
+
+*Figure x : The screenshot below shows the HTTP API POST operation with the parameters being passed.*
+
+![](images/Swagger_Parameters.png)
+
+*Figure y : The reponse received by the POST Operation*
+
+![](images/Swagger_Response.png)
 
 ## Improvements and Future Work
 
 
 ## References
+
+

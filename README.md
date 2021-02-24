@@ -109,11 +109,13 @@ This dataset can then be accessed in our jupyter notebook by
 
 ## Automated ML
 
-### Automated Machine Learning (AutoML)
+### Overview
 
 Automated machine learning is the process of automating the time consuming, iterative tasks of machine learning model development. 
 
 AutoML is used to automate the repetitive tasks by creating a number of pipelines in parallel that try different algorithms and parameters. This iterates through ML  algorithms paired with feature selections, where each iteration produces a model with a training score. The higher the score, the better the model is considered to fit the   data. This process terminates when the exit criteria defined in the experiment is satisfied.
+
+### AutoML Configuration
 
 Instantiate an AutoMLConfig object for AutoML Configuration.
 
@@ -190,13 +192,92 @@ Azure Automated ML has a feature called **Explainability** which shows informati
 ![](images/Model_Explanation.png)
 
 ## Hyperparameter Tuning
-*TODO*: What kind of model did you choose for this experiment and why? Give an overview of the types of parameters and their ranges used for the hyperparameter search
+
+### Overview
+
+Hyperparameters are adjustable parameters that let us control the model training process. Model performance depends heavily on these hyperparameters. Hyperparameter tuning is typically computationally expensive and manual. Azure Machine Learning lets us automate hyperparameter tuning and run experiments in parallel to efficiently optimize hyperparameters.
+
+For this, first the data was taken from the `heart-failure-dataset`. Then the datset was passed to `clean_data` function in [train.py](train.py) file to clean the data. Then the dataset was split into train and test set. After that the training data was passed to a **Logistic Regression Model** as it is a binary classification dataset.
+
+### HyperDrive Configuration
+
+**Hyperparameter Sampling Method and Space :**
+
+The hyperparameters of the logistic regression model such as Inverse of Regularization strength (`C`) and Maximum Number of Iterations (`max_iter`) were tuned using Microsoft Azure Machine Learning's hyperparameter tuning package `HyperDrive`.
+
+The search space for randomly choosing hyperparameters was selected. The search space in this project were specified as choice for `max_iter`, and uniform for `C`.
+This search space was then fed to a parameter sampler which specified the method to select hyperparameters from the search space. 
+
+This experiment used a `RandomParameterSampling` sampler to randomly select values specified in the search space for `C` and `max_iter`.
+In this sampling algorithm, hyperparameter values are randomly selected from the defined search space and supports early termination of low-performance runs thus taking less computational efforts.
+
+```
+# Create the different params that we will be using during training
+param_sampling = RandomParameterSampling({'--C' : uniform(0.01,100),
+                                        '--max_iter': choice(16,32,64,128,256)})
+```
+
+**Termination Policy :**
+
+Here BanditPolicy was used as a stopping policy as Bandit Policy with a smaller allowable slack is the most aggressively compute saving policy.
+
+Bandit policy is based on slack factor/slack amount and evaluation interval. Bandit terminates runs where the primary metric is not within the specified slack factor/slack amount compared to the best performing run.
+
+```early_termination_policy = BanditPolicy(slack_factor=0.1, evaluation_interval = 2, delay_evaluation=5)
+```
+
+**HyperDrive Configuration :**
+```
+hyperdrive_run_config = HyperDriveConfig(hyperparameter_sampling = param_sampling,
+                                         primary_metric_name = "Accuracy", 
+                                         primary_metric_goal = PrimaryMetricGoal.MAXIMIZE, 
+                                         max_total_runs = 25, 
+                                         max_concurrent_runs=4, 
+                                         policy=early_termination_policy, 
+                                         run_config=estimator)
+```
 
 
 ### Results
-*TODO*: What are the results you got with your model? What were the parameters of the model? How could you have improved it?
 
-*TODO* Remeber to provide screenshots of the `RunDetails` widget as well as a screenshot of the best model trained with it's parameters.
+Once submitted, the progress of the run can be viewed using `RunDetails` widget.
+
+*Figure 11 : The screenshot below shows the status of the run using `RunDetails` widget.*
+
+![](images/HyperDrive_Run_Details_NB.png)
+
+*Figure 12 : The screenshot below shows the different Run details.*
+
+![](images/HyperDrive_Run_Details_NB2.png)
+
+*Figure 13 : The following figure shows the scatter plot of the `Accuracy` produced by training different models.*
+
+![](images/HyperDrive_Run_Accuracy.png)
+
+*Figure 14 : The following figure shows the 2 D scatter plot of the `Accuracy` obtained with different values of `C` and `max_iter`.
+
+![](images/HyperDrive_Run_Hyperparameters.png)
+
+*Figure 15 : The following screenshots shows the HyperDrive Run Deatils*
+
+![](images/HyperDrive_Run_Deatils1.png)
+
+![](images/Hyper_Drive_Run_Details2.png)
+
+The Best Model generated by the HyperDrive run was the with:
+* `C` value : 85.769
+* `max_iter` value : 128
+
+*Figure 16 : The details of the best HyperDrive run are shown below.*
+
+![](images/Best_HyperDrive_Run_Details1.png)
+
+![](images/Best_HyperDrive_Run_Details2.png)
+
+*Figure 17 : The best HyperDrive Run metrics are shown below.*
+
+![](images/HyperDrive_Run_Metrics.png)
+
 
 ## Model Deployment
 
@@ -220,7 +301,7 @@ service = Model.deploy(workspace=ws,
 
 service.wait_for_deployment(show_output=True)
 ```
-*Figure 4 : The screenshot below shows the deployed model endpoint with Deplyment State - Healthy.*
+*Figure 18 : The screenshot below shows the deployed model endpoint with Deplyment State - Healthy.*
 
 ![](images/Deployed_Model_Details.png)
 
@@ -231,7 +312,7 @@ Following commands passes the data to the model as an HTTP POST request and reco
 ```
 resp = requests.post(service.scoring_uri, input_data, headers = headers)
 ```
-*Figure t : Screenshot below shows the sample data response from the deployed model.*
+*Figure 19 : Screenshot below shows the sample data response from the deployed model.*
 
 ![](images/Endpoint_test.png)
 
@@ -280,11 +361,11 @@ The application insights for displaying logs can be enabled for the deployed mod
 service.update(enable_app_insights = True)
 ```
 
-*Figure x : The screenshot below shows the Application Insight Enabled for the deployed model.*
+*Figure 20 : The screenshot below shows the Application Insight Enabled for the deployed model.*
 
 ![](images/Deployed_Model_Details2.png)
 
-*Figure y : We can access the logs through the Application Insights URL*
+*Figure 21 : We can access the logs through the Application Insights URL*
 
 ![](images/Application_Insights.png)
 
@@ -294,15 +375,15 @@ In this step, we will consume the deployed model using Swagger to interact with 
 
 To interact with deployed web service's API resources, we go to localhost:9000 and change URL on Swagger UI to http://localhost:8000/swagger.json.  
 
-*Figure e : This is shown in the figure below*
+*Figure 22 : This is shown in the figure below*
 
 ![](images/Swagger.png)
 
-*Figure x : The screenshot below shows the HTTP API POST operation with the parameters being passed.*
+*Figure 23 : The screenshot below shows the HTTP API POST operation with the parameters being passed.*
 
 ![](images/Swagger_Parameters.png)
 
-*Figure y : The reponse received by the POST Operation*
+*Figure 24 : The reponse received by the POST Operation*
 
 ![](images/Swagger_Response.png)
 

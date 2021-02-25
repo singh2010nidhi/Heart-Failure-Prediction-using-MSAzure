@@ -242,7 +242,8 @@ Here BanditPolicy was used as a stopping policy as Bandit Policy with a smaller 
 
 Bandit policy is based on slack factor/slack amount and evaluation interval. Bandit terminates runs where the primary metric is not within the specified slack factor/slack amount compared to the best performing run.
 
-```early_termination_policy = BanditPolicy(slack_factor=0.1, evaluation_interval = 2, delay_evaluation=5)
+```
+early_termination_policy = BanditPolicy(slack_factor=0.1, evaluation_interval = 2, delay_evaluation=5)
 ```
 
 **HyperDrive Configuration :**
@@ -273,7 +274,7 @@ Once submitted, the progress of the run can be viewed using `RunDetails` widget.
 
 ![](images/HyperDrive_Run_Accuracy.png)
 
-*Figure 15 : The following figure shows the 2 D scatter plot of the `Accuracy` obtained with different values of `C` and `max_iter`.
+*Figure 15 : The following figure shows the 2 D scatter plot of the `Accuracy` obtained with different values of `C` and `max_iter`.*
 
 ![](images/HyperDrive_Run_Hyperparameters.png)
 
